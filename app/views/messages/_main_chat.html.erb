@@ -19,13 +19,13 @@
   </div>
 </div>
 
-<div class="message-post-form-unit">
+<%= form_with model: [@room, @message], html: {class: 'message-post-form-unit'}, local: true do |f| %>
   <div class="form-input">
-    <input class="message-post-form" placeholder="Type a message">
+    <%= f.text_field :content, class: 'message-post-form', placeholder: 'Type a message' %>
     <label class="form-image">
       <span class="image-file">画像</span>
-      <input type="file" class="hidden">
+      <%= f.file_field :image, class: 'hidden' %>
     </label>
   </div>
-  <input class="form-send-btn" type="submit" value="送信">
-</div>
+  <%= f.submit '送信', class: 'form-send-btn' %>
+<% end %>

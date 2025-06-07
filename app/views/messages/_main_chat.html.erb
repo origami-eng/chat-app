@@ -4,19 +4,7 @@
 </div>
 
 <div class="my-messages">
-  <div class="message">
-    <div class="post-info">
-      <div class="post-user-name">
-        Tom
-      </div>
-      <div class="post-created-at">
-        2020/3/31(Wed) 12:43:30
-      </div>
-    </div>
-    <div class="message-text">
-      おはよう
-    </div>
-  </div>
+  <%= render partial: 'message', collection: @messages %>
 </div>
 
 <%= form_with model: [@room, @message], html: {class: 'message-post-form-unit'}, local: true do |f| %>

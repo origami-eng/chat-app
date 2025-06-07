@@ -132,7 +132,7 @@
   border: none;
 }
 
-.form-image {
+.form-image{
   font-size: 12px;
   background-color: lightblue;
   color: white;
@@ -142,6 +142,6 @@
   text-align: center;
 }
 
-.hidden {
+.hidden{
   display: none;
 }

@@ -1,28 +1,43 @@
 require 'rails_helper'
 
-RSpec.describe 'ユーザー新規登録', type: :system do
-  before do
-    @user = FactoryBot.build(:user)
+RSpec.describe 'ユーザーログイン機能', type: :system do
+  it 'ログインしていない状態でトップページにアクセスした場合、サインインページに移動する' do
+    # トップページに遷移する
+    visit root_path
+    # ログインしていない場合、サインインページに遷移していることを確認する
+    expect(page).to have_current_path(new_user_session_path)
   end
-  context 'ユーザー新規登録ができるとき' do 
-    it '正しい情報を入力すればユーザー新規登録ができてトップページに移動する' do
-      # 新規登録ページへ移動する
-      visit new_user_registration_path
-      # ユーザー情報を入力する
-      fill_in 'Name', with: @user.name
-      fill_in 'Email', with: @user.email
-      fill_in 'Password', with: @user.password
-      fill_in 'Password confirmation', with: @user.password_confirmation
-      binding.pry
-      # サインアップボタンを押すとユーザーモデルのカウントが1上がることを確認する
-      expect{
-        find('input[name="commit"]').click
-        sleep 1
-      }.to change { User.count }.by(1)
-      # トップページへ遷移することを確認する
-      expect(page).to have_current_path(root_path)
-    end
+
+  it 'ログインに成功し、トップページに遷移する' do
+    # 予め、ユーザーをDBに保存する
+    @user = FactoryBot.create(:user)
+    # サインインページへ移動する
+    visit new_user_session_path
+    # ログインしていない場合、サインインページに遷移していることを確認する
+    expect(page).to have_current_path(new_user_session_path)
+    # すでに保存されているユーザーのemailとpasswordを入力する
+    fill_in 'user_email', with: @user.email
+    fill_in 'user_password', with: @user.password
+    # ログインボタンをクリックする
+    find('input[name="commit"]').click
+    # トップページに遷移していることを確認する
+    expect(page).to have_current_path(root_path)
+  end
+
+  it 'ログインに失敗し、再びサインインページに戻ってくる' do
+    # 予め、ユーザーをDBに保存する
+    @user = FactoryBot.create(:user)
+    # トップページに遷移する
+    visit root_path
+    # ログインしていない場合、サインインページに遷移していることを確認する
+    expect(page).to have_current_path(new_user_session_path)
+    # 誤ったユーザー情報を入力する
+    another_user = FactoryBot.build(:user)
+    fill_in 'user_email', with: another_user.email
+    fill_in 'user_password', with: another_user.password
+    # ログインボタンをクリックする
+    find('input[name="commit"]').click
+    # サインインページに戻ってきていることを確認する
+    expect(page).to have_current_path(new_user_session_path)
   end
 end
-
-user = User.new(name: "test", email: "test@example.com", password: "password123", password_confirmation: "password123")
